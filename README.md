@@ -16,8 +16,7 @@ reading through the list you find the usual profanity, but apparently also the 1
 See [badwords.md](badwords.md) for a google-translated version.
 
 
-group.bin format
-================
+# group.bin format
 
 The compressed files start with the magic bytes: `04 22 4d 18`.
 The decompressed files start with the magic bytes: `3d 03 07 01 00 00 87 e0 81 80`.
@@ -46,8 +45,7 @@ Each section starts with 2
 | uint32    | some checksum??
 |  ...      | section content
 
-file types
-=============
+## file types
 
 |    filetype       |  meaning
 | ----------------- | -----
@@ -72,8 +70,7 @@ file types
 | 00000006:e1ccaf5c |
 
 
-file type 00000001.f67cbd74
-=================
+## file type 00000001.f67cbd74
 
 | type      | content
 | --------- | ------
@@ -102,4 +99,70 @@ field types:
 |   1   | uint32 | number
 |   2   | float32 | floating point number
 |   3   | uint32  | color value
+
+
+# network protocol
+
+ * SimcityBuildit confusingly uses http over port 443.
+ * *todo* figure out how the base url is determined.
+ * The base url is: http://<varyingip>:443/simcity/
+ * requests are either with POST or GET
+
+requests used:
+
+|  request |  query   | POST data  | response
+| -------- | --------- | --------- | --------
+|  Login  | see below | *none* | player state
+|  GetUpdates  | see below | sc-list of protobuf encoded filenames | sc-list of protobuf encoded file info
+|  GetPlayer | see below, `ids` contains playerid | *none* | sc encoded player state
+|  Ping  | see below | *none* | sc encoded response
+|  SetPlayer | see below | sc encoded gzipped protobuf encoded streams | sc encoded response
+|  Log |  device spec | json data | *none*
+|  TextRender |  *none*  | protobuf containing texts | gzipped protobuf containing pngs
+
+## request query parameters
+
+commonly used query parameters
+
+| app   | the app version number
+| id    | the user id
+| keyid | '2'
+| req   | request timestamp
+| sig   | hmac of request (?)
+| usesid | session timestamp
+| nw    | 'G' or 'W'
+| p     | '2'
+
+| lvl   | current player level
+| fw    | current android / ios version
+| df    | '14'
+| gpuid  | your device's GPU type
+| devid | your device model name
+| retina | '1'
+
+## sc encoding
+
+This is not entirely clear yet.
+
+Responses start with a varint ( see protobuf ) containing a timestamp.
+followed by a list of type + values, with optional length.
+some of these values are gzipped or uncompressed protobuf encoded structures.
+
+| type | content
+| ---- | -------
+|  05  | baseurl
+|  08  | three varints |  two of which are timestamps, probably a validity period
+|  06  | varint  | timestamp
+| 0c, od, 0f | three varints + gzipped data | 
+| 20, 24, 2a | varint + protobuf
+
+## the hmac
+
+The secret key for the hmac is stored in the userdata area in a file named `appdata.i3d`.
+This key is scrambled somewhat before use.
+I think it is updated with every request, so if you want to automate some things in SC you would have to do
+this on the device running the game. because you do need the actual appdata.i3d file contents, and update it your self then.
+
+the exact details I still need to figure out.
+
 
