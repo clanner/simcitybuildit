@@ -13,3 +13,5 @@ I'll post a decoder for these later.
 One intereting example i post here: [badwords.txt](badwords.txt).
 reading through the list you find the usual profanity, but apparently also the 1989 Tiananmen Square massacre, is listed as 'badword'. ( referred to as 'may 35th' - `5月35日`  or `5月35号` ).
 
+See [badwords.md](badwords.md) for a google-translated version.
+
