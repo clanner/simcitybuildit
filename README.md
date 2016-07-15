@@ -124,6 +124,8 @@ requests used:
 
 commonly used query parameters
 
+| arg | description
+| --- | ----------
 | app   | the app version number
 | id    | the user id
 | keyid | '2'
@@ -132,7 +134,6 @@ commonly used query parameters
 | usesid | session timestamp
 | nw    | 'G' or 'W'
 | p     | '2'
-
 | lvl   | current player level
 | fw    | current android / ios version
 | df    | '14'
