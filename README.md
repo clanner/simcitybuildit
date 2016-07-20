@@ -29,48 +29,46 @@ In older .ipa's the fourth byte is zero instead of one.
 |  uint32    | filename length
 |  bytes    | filename, followed by 9 bytes: `00 00 00 00 00 77 21 3c dc`
 |  uint32   | total content size
-|  uint32   | filetype related
-|  uint32   | filetype magic
 |  uint32   | number of sections
+
+## sections
+
+| type      | content
+| --------- | ------
+|  uint32   | section magic
+|  uint32   | number of blocks
 |  2 bytes  | in all but one file: `01 01`
 |  ...      | section data
 
-Then followed by section data.
+Then followed by block data.
 
-Each section starts with 2 
+Each block starts with:
 
 | type      | content
 | --------- | ------
 | uint32    | size, including this header
 | uint32    | some checksum??
-|  ...      | section content
+|  ...      | block content
 
-## file types
+## section types
 
-|    filetype       |  meaning
-| ----------------- | -----
-| 00000001:3521f539 | 
-| 00000001:62ab11c4 |
-| 00000001:c61d838d |
-| 00000001:d5610dab |
-| 00000001:f67cbd74 | database - named tables with records with named fields
-| 00000002:2544f997 |
-| 00000002:9b0704c1 |
-| 00000002:c61d838d |
-| 00000002:f67cbd74 |
-| 00000003:2544f997 |
-| 00000003:3521f539 |
-| 00000003:c61d838d |
-| 00000003:d5610dab |
-| 00000004:2544f997 |
-| 00000005:2544f997 |
-| 00000005:3521f539 |
-| 00000005:e1ccaf5c |
-| 00000006:2544f997 |
-| 00000006:e1ccaf5c |
+|    magic |  meaning
+| -------- | -----
+| 2544f997 | contains color codes
+| 3521f539 |  
+| 62ab11c4 |  gpu code: <text>, <text>, [ <varname> <values> ]+
+| 89546ed9 |
+| 9b0704c1 | font path names  
+| c6133cad |
+| c61d838d | html
+| d5610dab | audio
+| e1ccaf5c |
+| e1ccafe2 | 3d data
+| f67cbd74 | database - named tables with records with named fields
 
 
-## file type 00000001.f67cbd74
+
+## file type f67cbd74
 
 | type      | content
 | --------- | ------
