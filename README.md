@@ -102,8 +102,7 @@ field types:
 # network protocol
 
  * SimcityBuildit confusingly uses http over port 443.
- * *todo* figure out how the base url is determined.
- * The base url is: http://<varyingip>:443/simcity/
+ * The base url is: http://live.simcitybuildit.com:443/simcity/
  * requests are either with POST or GET
 
 requests used:
@@ -164,4 +163,24 @@ this on the device running the game. because you do need the actual appdata.i3d 
 
 the exact details I still need to figure out.
 
+# local storage
+
+on android the local game storage is in `/data/data/com.ea.game.simcitymobile_row/files/`.
+
+## 0.pb
+
+contains the game state, in a packet similar to the Login or SetPlayer responses.
+
+## 64.pb
+
+contains protobuf encoded data
+
+## 65.pb
+
+contains a protobuf encoded activity log,
+I think this is so the simcity app can playback your game activity after some offline time.
+
+## 67.pb
+
+inapp purchase items
 
