@@ -116,6 +116,9 @@ requests used:
 |  SetPlayer | see below | sc encoded gzipped protobuf encoded streams | sc encoded response
 |  Log |  device spec | json data | *none*
 |  TextRender |  *none*  | protobuf containing texts | gzipped protobuf containing pngs
+|  GetMarket | see below | *none* | ...
+|  Initialize | `key` | *none* | 128 byte key/sig(?), stamp, uid, 20byte hmac
+|  LogError | `p` | json data | *none*
 
 ## request query parameters
 
