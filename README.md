@@ -101,9 +101,12 @@ field types:
 
 # network protocol
 
- * SimcityBuildit confusingly uses http over port 443.
- * The base url is: http://live.simcitybuildit.com:443/simcity/
+ * The initial url is: http://live.simcitybuildit.com/simcity/
+ * after login the user gets a new url to use, usually a numeric ip address, and confusingly (but not inconveniently) using http over port 443 
  * requests are either with POST or GET
+
+ * on a rooted android device it is quite easy to capture the network trafic on the phone using tcpdump.
+ * and inspect files in the `/data/data/com.ea.game.simcitymobile_row/files` directory for changes.
 
 requests used:
 
