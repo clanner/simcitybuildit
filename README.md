@@ -122,6 +122,9 @@ requests used:
 |  GetMarket | see below | *none* | ...
 |  Initialize | `key` | *none* | 128 byte key/sig(?), stamp, uid, 20byte hmac
 |  LogError | `p` | json data | *none*
+|  Competition | see below | sc encoded protobuf | sc encoded response
+|  GetFriendMeta | see below | sc encoded protobuf | sc encoded response
+
 
 ## request query parameters
 
