@@ -17,7 +17,7 @@ import struct
 from binascii import *
 import sys
 
-# note: use python3, otherwise the `create_class` function will not work.
+verbose = False
 
 def getuint32(data, o, last):
     if o+4<=last:
@@ -44,9 +44,14 @@ def getstr16(data, first, last):
         return txt, o-first
     return None, 0
 
+def hexdump(data, first, last):
+    print("hex:", b2a_hex(data[first:last]))
+
 def calcrecsize(types):
     size = 0
     for t in types:
+        if type(t)==str:  # python2 compatibility
+            t = ord(t)
         if t==0: size += 2    # uint16
         elif t==1: size += 4  # uint32
         elif t==2: size += 4  # float32
@@ -56,8 +61,11 @@ def calcrecsize(types):
     return size
 
 class RecordBase(object): 
+    # baseclass for a database record.
     def __init__(self, data, o, last, types, fields, strs):
         for typ, nam in zip(types, fields):
+            if type(typ)==str:  # python2 compatibility
+                typ = ord(typ)
             if typ==0:
                 value, n = getuint16(data, o, last) ; o += n
                 if 0 <= value < len(strs):
@@ -84,11 +92,13 @@ class RecordBase(object):
 
 
 def create_class(name):
+    # create a class for database records
     class New(RecordBase):pass
-    New.__name__ = name
+    New.__name__ = str(name)
     return New
 
 def dumpblock_f67cbd74(data, first, last):
+    # decode a database table with records.
     o = first
     nstr, n = getuint32(data, o, last) ; o += n
     strs = []
@@ -139,6 +149,7 @@ def dumpblock_f67cbd74(data, first, last):
     return o-first
 
 def dumpblock_9b0704c1(data, first, last):
+    # font
     path = data[first:last].decode('utf-8', 'ignore').rstrip("\x00")
     print("%06x: '%s'" % (first, path))
 
@@ -169,6 +180,7 @@ def getvariableinit(data, first, last):
 
 
 def dumpblock_62ab11c4(data, first, last):
+    # gpu / shader code
     o = first
     code1len, n = getuint32(data, o, last) ; o += n
     code1text = data[o:o+code1len] ; o += code1len
@@ -197,44 +209,59 @@ def dumpblock_62ab11c4(data, first, last):
         print("WARNING: %d bytes left after 62ab11c4" % (last-o))
 
 def dumpblock_c61d838d(data, first, last):
+    # html
     o = first
     code1len, n = getuint32(data, o, last) ; o += n
     code1text = data[o:o+code1len] ; o += code1len
     zero1, n = getuint8(data, o, last) ; o += n
     code1text = code1text.decode("utf-8", "ignore").rstrip("\x00")
 
-    print("----\n%s\n----" % (code1text))
+    print("---- (html)\n%s\n----" % (code1text))
 
     if o!=last:
         print("WARNING: %d bytes left after c61d838d" % (last-o))
 
 
 def dumpblock_2544f997(data, first, last):  # color related
-    pass
+    if verbose:
+        print("---- (colors?)")
+        hexdump(data, first, last)
 
 def dumpblock_3521f539(data, first, last):  # bitmap ?
     o = first
     w = struct.unpack_from("<L5HB4HL", data, o) ; o += 27
-    print("bitmap? : %08x %04x %04x %04x %04x %04x %02x %04x cols:%04x rows:%04x %04x %08x" % w)
-    #print(" (%8x: %8x) %s" % (last-o, w[8]*w[9]*4, b2a_hex(data[o:last])))
+    print("--- bitmap? : %08x %04x %04x %04x %04x %04x %02x %04x cols:%04x rows:%04x %04x %08x" % w)
+    if verbose:
+        print(" (%8x: %8x) %s" % (last-o, w[8]*w[9]*4, b2a_hex(data[o:last])))
 
 def dumpblock_81c24cbe(data, first, last):
     #  00 10 00 00 00 10 08 00 00 00
-    pass
+    if verbose:
+        print("---- ???")
+        hexdump(data, first, last)
 
 def dumpblock_89546ed9(data, first, last):
-    pass
+    if verbose:
+        print("---- ???")
+        hexdump(data, first, last)
 
 def dumpblock_c6133cad(data, first, last):
-    pass
+    if verbose:
+        print("---- ???")
+        hexdump(data, first, last)
 
 def dumpblock_d5610dab(data, first, last):   # vorbis
-    pass
+    if verbose:
+        print("---- audio / vorbis")
+        hexdump(data, first, last)
 
 def dumpblock_d569853c(data, first, last):
-    pass
+    if verbose:
+        print("---- ???")
+        hexdump(data, first, last)
 
 def dumpblock_e1ccaf5c(data, first, last):
+    print("--- ???")
     o = first
     nr, n = getuint32(data, o, last) ; o += n
     for _ in range(nr):
@@ -243,7 +270,6 @@ def dumpblock_e1ccaf5c(data, first, last):
     print()
 
 def dumpblock_e1ccafe2(data, first, last):
-
     o = first
     one, mg1, mg2, nr = struct.unpack_from("<LLLL", data, o) ; o += 16
     print("3d: %08x %08x %08x #%d items" % (one, mg1, mg2, nr))
@@ -291,18 +317,20 @@ def dumpsection(data, first, last):
     nblocks, n = getuint32(data, o, last) ; o += n
     bb = data[o:o+2]  ; o += 2    # always 01 01
 
-#   359 SECT 2544f997 -- short: 01 00050000 00000000
+#   351 SECT 2017 BLOCKS 2544f997 -- short: 01 00050000 00000000
 #                     -- long:  00 00050000 00000000 00000000 ffcccccc ffa3a3a3 0a7f7f7f 00000004 00000000 00000000 00000000 00000000 000000000000
-#   147 SECT 3521f539
-#     7 SECT 62ab11c4  -- gpu code   -- len:text, len:text, count: [ len:text, len:floats ]
-#   359 SECT 89546ed9
-#     1 SECT 9b0704c1  -- (font) path names : zstr
-#    35 SECT c6133cad
-#     4 SECT c61d838d  -- html
-#    11 SECT d5610dab  -- audio
-#    64 SECT e1ccaf5c
-#    63 SECT e1ccafe2  -- 3d data
-#    35 SECT f67cbd74  -- db table
+#   103 SECT  203 BLOCKS 3521f539
+#     7 SECT  645 BLOCKS 62ab11c4  -- gpu code   -- len:text, len:text, count: [ len:text, len:floats ]
+#   359 SECT 1961 BLOCKS 89546ed9
+#     1 SECT    4 BLOCKS 9b0704c1  -- (font) path names : zstr
+#    38 SECT  191 BLOCKS c6133cad  -- in 3d file
+#     4 SECT  117 BLOCKS c61d838d  -- html
+#     2 SECT  392 BLOCKS d5610dab  -- audio
+#    61 SECT  110 BLOCKS e1ccaf5c
+#    59 SECT  153 BLOCKS e1ccafe2  -- 3d data
+#    37 SECT  121 BLOCKS f67cbd74  -- db table
+#       SECT             81c24cbe  -- old audio data ( in sound_main file )
+#       SECT             d569853c  -- old audio data ( in sound_main file )
 
     print("%06x: SECT %08lx [%3d blocks]" % (first, magicnum, nblocks))
 
@@ -346,7 +374,7 @@ def dumpsections(data, first, last):
 def processfile(data, first, last):
     o = first
 
-    prefix = data[o:o+10]  ; o += 10      # always 3d 03 07 01 00 00 87 e0 81 80
+    prefix = data[o:o+10]  ; o += 10      # "3d 03 07 0[01] 00 00 87 e0 81 80" 
     nlen, n = getuint32(data, o, last) ; o += n
     dbname = data[o:o+nlen-9].decode('utf-8', 'ignore') ; o += nlen-9
     ignore = data[o:o+9]  ; o += 9  # always starts with: 00 00 00 00 00 77 21 3c dc
@@ -361,8 +389,15 @@ def processfile(data, first, last):
 
 def main():
     import sys
-    for fn in sys.argv[1:]:
-        print("==> ", fn, " <==")
+    i = 1
+    if sys.argv[i] == '-v':
+        global verbose
+        verbose = True
+        i += 1
+    filelist = sys.argv[i:]
+
+    for fn in filelist:
+        print("==>", fn, "<==")
         try:
             with open(fn, "rb") as fh:
                 data = fh.read()
