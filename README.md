@@ -15,6 +15,14 @@ reading through the list you find the usual profanity, but apparently also the 1
 
 See [badwords.md](badwords.md) for a google-translated version.
 
+# Random Info
+
+ * [OmegaLayout.md](OmegaLayout.md) - optimal layouts for Controlnet Tower in Omega residential zones.
+ * [AreaUpgrades.md](AreaUpgrades.md) - overview of cost of buying area extensions.
+ 
+# Downloads
+
+ * [decodecsv.py](decodecsv.py) - a script for decoding csv.group.bin, and other data files.
 
 # group.bin format
 
@@ -97,7 +105,6 @@ field types:
 |   1   | uint32 | number
 |   2   | float32 | floating point number
 |   3   | uint32  | color value
-
 
 # network protocol
 
