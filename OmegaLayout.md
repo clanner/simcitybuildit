@@ -20,18 +20,23 @@ have to make a small detour, then place the tower, then remove the detour.
 
 ## With the basic controlnet tower:
 
+    +------+----+
+    |aaccee|gghh|
+    |aaccee|gghh|
+    |bb//ff|iijj|    +--------------+
+    |bb//ff|iijj|    |aabbBBAAzzyyxx|
+    |BBCC+-+kkll|    |aabbBBAAzzyyxx|
+    |BBCC+-+kkll|    |cc//CCDDEEvvww|
+    |AADD|*|mmnn|    |cc//CCDDEEvvww|
+    |AADD|*|mmnn|    |eeff++--++----+
+    |zzEE+-+oopp|    |eeff||**||ttuu|
+    |zzEE+-+oopp|    +----++--++ttuu|
+    |yyvv|tt//qq|    |ggiikkmmoo//ss|
+    |yyvv|tt//qq|    |ggiikkmmoo//ss|
+    |xxww|uussrr|    |hhjjllnnppqqrr|
+    |xxww|uussrr|    |hhjjllnnppqqrr|
+    +----+------+    +--------------+
 
-    aabbBBAAzzyyxx
-    aabbBBAAzzyyxx 
-    cc??CCDDEEvvww
-    cc??CCDDEEvvww 
-    eeff---------- 
-    eeff||**||ttuu 
-    ----------ttuu 
-    ggiikkmmoo??ss 
-    ggiikkmmoo??ss 
-    hhjjllnnppqqrr 
-    hhjjllnnppqqrr 
 
 This layout allows for 30 houses, with empty spaces marked by `?`
 
@@ -60,3 +65,22 @@ With this layout you can place 65 houses.
 
 All these layouts require roads around the edges.
 
+another solution by [RudyardSapling](https://www.reddit.com/user/RudyardSapling)
+
+
+    +----+------
+    |aabb|ooppqq
+    |aabb|ooppqq      +--------------+
+    |ccdd|rrsstt      |aacceeggiikkmm|
+    |ccdd|rrsstt      |aacceeggiikkmm|
+    |eeff+-----+      |bbddffhhjjllnn|
+    |eeff|#uuvv|      |bbddffhhjjllnn|
+    |gghh|*uuvv|      +----+----+----+
+    |gghh|*wwxx|      |oorr|#**#|yyBB|
+    |iijj|#wwxx|      |oorr|uuww|yyBB|
+    |iijj+-----+      |ppss|uuww|zzCC|
+    |kkll|yyzzAA      |ppss|vvxx|zzCC|
+    |kkll|yyzzAA      |qqtt|vvxx|AADD|
+    |mmnn|BBCCDD      |qqtt+----+AADD|
+    |mmnn|BBCCDD
+    +----+------
